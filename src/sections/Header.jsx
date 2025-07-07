@@ -34,12 +34,11 @@ const Header = () => {
     };
 
     const handleCartClick = () => {
-        if (!user) {
-            navigate('/login');
-        } else {
-            navigate('/cart');
-        }
+        navigate('/cart');
     };
+
+    // Calculate total items in cart
+    const totalCartItems = cartItems.reduce((total, item) => total + item.count, 0);
 
     return (
         <header className="flex flex-col sm:flex-row items-center justify-between p-4 bg-white w-full xl:px-20">
@@ -53,9 +52,9 @@ const Header = () => {
                     >
                         Cart
                         <img src={cartIcon} className="w-8" alt="Cart" />
-                        {cartItems.length > 0 && (
+                        {totalCartItems > 0 && (
                             <span className="absolute top-0 right-0 bg-blue-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
-                                {cartItems.length}
+                                {totalCartItems}
                             </span>
                         )}
                     </div>
@@ -86,9 +85,9 @@ const Header = () => {
                 >
                     Cart
                     <img src={cartIcon} className="w-8" alt="Cart" />
-                    {cartItems.length > 0 && (
+                    {totalCartItems > 0 && (
                         <span className="absolute top-0 right-0 bg-blue-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
-                            {cartItems.length}
+                            {totalCartItems}
                         </span>
                     )}
                 </div>

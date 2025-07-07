@@ -63,18 +63,37 @@ export const loader = async ({ params }) => {
 const ProductDetails = () => {
   const { asin } = useParams();
   const { product } = useLoaderData();
-  const { addToCart } = useContext(ShopContext);
+  const { addToCart, isAuthenticated, user } = useContext(ShopContext);
   const [message, setMessage] = useState("");
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
 
   if (!product) {
     return <p className="text-center text-blue-600">Product not found.</p>;
   }
 
-  const handleAddToCart = () => {
-    addToCart(product);
-    setMessage("Added to cart!");
-    setTimeout(() => setMessage(""), 3000);
+  const handleAddToCart = async () => {
+    if (isAddingToCart) return; // Prevent multiple rapid clicks
+
+    if (!isAuthenticated || !user) {
+      setMessage("Please log in to add items to cart!");
+      setTimeout(() => setMessage(""), 3000);
+      return;
+    }
+
+    setIsAddingToCart(true);
+    const success = await addToCart(product);
+
+    if (success) {
+      setMessage("Added to cart!");
+    } else {
+      setMessage("Failed to add item to cart. Please try again.");
+    }
+
+    setTimeout(() => {
+      setMessage("");
+      setIsAddingToCart(false);
+    }, 1000); // Reset after 1 second
   };
 
   const nextImage = () => {
@@ -138,10 +157,14 @@ const ProductDetails = () => {
         <p>{product.delivery}</p>
         <div className="flex flex-col items-center">
           <button
-            className="text-lg font-semibold bg-blue-600 text-white py-2 px-6 rounded-lg shadow-md hover:bg-slate-300 hover:text-blue-700 transition"
+            className={`text-lg font-semibold py-2 px-6 rounded-lg shadow-md transition ${isAddingToCart
+                ? 'bg-gray-400 text-white cursor-not-allowed'
+                : 'bg-blue-600 text-white hover:bg-slate-300 hover:text-blue-700'
+              }`}
             onClick={handleAddToCart}
+            disabled={isAddingToCart}
           >
-            Add to cart
+            {isAddingToCart ? 'Adding...' : 'Add to cart'}
           </button>
           {message && (
             <div className="flex items-center mt-4 bg-green-100 text-green-700 p-3 rounded-lg shadow-md">

@@ -6,11 +6,9 @@ import { signOut } from "firebase/auth";
 import { ShopContext } from "../sections/ShopContext";
 
 const Dropdown = ({ type, list, user }) => {
-    const { handleUser } = useContext(ShopContext);
     const handleLogout = async () => {
         try {
             await signOut(auth);
-            handleUser();
             console.log("User logged out successfully");
         } catch (error) {
             console.error("Error logging out: ", error.message);

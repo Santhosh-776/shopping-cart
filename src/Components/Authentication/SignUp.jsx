@@ -65,10 +65,8 @@ const signUp = () => {
         setLoading(true);
         try {
             await signInWithPopup(auth, googleprovider);
-            handleSetUser();
-            navigate(-1);
+            navigate("/");
         } catch (error) {
-
             console.error('Error during sign in', error.message);
         } finally {
             setLoading(false);

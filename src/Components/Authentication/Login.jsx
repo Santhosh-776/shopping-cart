@@ -31,7 +31,6 @@ const Login = () => {
         setMessage(null);
         try {
             await signInWithEmailAndPassword(auth, email.trim(), password.trim());
-            handleSetUser();
             navigate("/");
         } catch (error) {
             console.error('Error during sign in', error.message);
@@ -47,7 +46,6 @@ const Login = () => {
         try {
             await signInWithPopup(auth, googleprovider);
             setMessage('Sign-in successful! Redirecting to home page...');
-            handleSetUser();
             navigate("/");
         } catch (error) {
             console.error('Error during sign in with Google', error.message);
